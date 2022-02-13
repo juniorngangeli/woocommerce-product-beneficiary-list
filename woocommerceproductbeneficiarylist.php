@@ -2,7 +2,7 @@
 /*
 Plugin Name: Woocommerce Product Beneficiary List
 Plugin URI: https://www.kinshasadigital.com
-Description: Permet d'associer à un produit Woocommerce une liste de bénéficiaire.
+Description: Allows you to associate a list of beneficiaries with a Woocommerce product.
 Author: Junior Ngangeli
 Version: 1.0.0
 Author URI: https://www.linkedin.com/in/junior-ngangeli
