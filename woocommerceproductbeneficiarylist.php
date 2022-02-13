@@ -16,7 +16,14 @@ define('WOO_PBL_URL', plugins_url('', __FILE__));
 define('WOO_PBL_DIR', plugin_dir_path(__FILE__));
 define('WOO_PBL_VER', '1.0.0');
 
+// Define plugin file constant.
+if ( ! defined( 'WOO_PBL_FILE' ) ) {
+	define( 'WOO_PBL_FILE', __FILE__ );
+	define( 'WOO_PBL_BASENAME', plugin_basename( WOO_PBL_FILE ) );
+}
+
 require_once(WOO_PBL_DIR . 'classes/class.woo_pbl.db.initializer.php');
+require_once(WOO_PBL_DIR . 'admin/class.woo_pbl.admin.php');
 
 
 class WoocommerceProductBeneficiaryList
@@ -30,7 +37,8 @@ class WoocommerceProductBeneficiaryList
 
     public function register()
 	{
-        $this->initializeWooCommerceHooks();
+        $wooPblDbAdmin = new WooPBLDbAdmin();
+		$wooPblDbAdmin->init();
     }
 
     /**
@@ -60,11 +68,6 @@ class WoocommerceProductBeneficiaryList
 
         $wooPblDbInitializer = new WooPBLDbInitializer();
         $wooPblDbInitializer->destroyTables();
-	}
-
-	function initializeWooCommerceHooks()
-	{
-		//TODO:
 	}
 }
 
