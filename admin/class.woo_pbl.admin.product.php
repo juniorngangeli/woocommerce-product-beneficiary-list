@@ -34,6 +34,7 @@
             
             $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  $wooPblProductRuleOfUse['product_price_per_beneficiary'] : null;
             $product_max_beneficiary =  isset($wooPblProductRuleOfUse['product_max_beneficiary']) ?  $wooPblProductRuleOfUse['product_max_beneficiary'] : -1;
+            $beneficiaries_options_enabled =  isset($wooPblProductRuleOfUse['beneficiaries_options_enabled']) ?  $wooPblProductRuleOfUse['beneficiaries_options_enabled'] : 0;
             require(WOO_PBL_DIR . 'admin/views/html-wc-product-beneficiaries-option-data-fields.php');
         }
 
@@ -56,6 +57,7 @@
 
             $product_price_per_beneficiary =  $_POST['product_price_per_beneficiary'];
             $product_max_beneficiary =  $_POST['product_max_beneficiary'];
+            $beneficiaries_options_enabled =  $_POST['beneficiaries_options_enabled'] == 'yes' ? 1 : 0;
     
 
             if(is_null($product_beneficiaries_option_id)) {
@@ -66,10 +68,11 @@
                         'product_id' => $product_id, 
                         'product_price_per_beneficiary' => $product_price_per_beneficiary, 
                         'product_max_beneficiary' => $product_max_beneficiary, 
+                        'beneficiaries_options_enabled' => $beneficiaries_options_enabled, 
                         'created_at' => $current_time,
                         'updated_at' => current_time('mysql', 1),
                     ), 
-                    array( '%d', '%d','%d', '%s', '%s') 
+                    array( '%d', '%d','%d', '%d', '%s', '%s') 
                 );
             } else {
                 $wpdb->update( 
@@ -77,10 +80,11 @@
                     [
                         'product_price_per_beneficiary' => $product_price_per_beneficiary, 
                         'product_max_beneficiary' => $product_max_beneficiary,
+                        'beneficiaries_options_enabled' => $beneficiaries_options_enabled, 
                         'updated_at' => current_time('mysql', 1),
                     ], 
                     ['id' => $product_beneficiaries_option_id, ],
-                    ['%d', '%d','%s',],
+                    ['%d', '%d', '%d','%s',],
                     ['%d']
                 );
             }

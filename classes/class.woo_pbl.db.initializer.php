@@ -29,7 +29,8 @@
                 id bigint(20) NOT NULL AUTO_INCREMENT,
                 product_id bigint(20) NOT NULL,
                 product_price_per_beneficiary decimal(10,2) NULL,
-                product_max_beneficiary int(10) DEFAULT '-1' NULL,
+                product_max_beneficiary int(10) DEFAULT '-1' NOT NULL,
+                beneficiaries_options_enabled tinyint(1) DEFAULT '1' NOT NULL,
 
                 created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
                 updated_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
