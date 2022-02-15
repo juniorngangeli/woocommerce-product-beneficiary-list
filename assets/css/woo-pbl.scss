@@ -1,0 +1,51 @@
+.ProductBeneficiariesForm {
+  label {
+    display: block;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  .input-text {
+    display: block;
+    width: 100%;
+  }
+}
+.ProductBeneficiaryForm {
+  background-color: #f1f1f1;
+  padding: 0.5em 0.5em 0.5em;
+  margin-bottom: 1rem;
+  &.Template {
+    display: none;
+  }
+  label {
+    display: block;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  .input-text {
+    display: block;
+    width: 100%;
+    background-color: #fff;
+  }
+}
+
+.single-product div.product form.cart {
+  div.quantity {
+    float: none;
+    display: block;
+    margin-bottom: 1rem;
+  }
+}

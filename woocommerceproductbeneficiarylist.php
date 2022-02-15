@@ -24,6 +24,7 @@ if ( ! defined( 'WOO_PBL_FILE' ) ) {
 
 require_once(WOO_PBL_DIR . 'classes/class.woo_pbl.db.initializer.php');
 require_once(WOO_PBL_DIR . 'admin/class.woo_pbl.admin.php');
+require_once(WOO_PBL_DIR . 'classes/class.woo_pbl.product.php');
 
 
 class WoocommerceProductBeneficiaryList
@@ -38,7 +39,11 @@ class WoocommerceProductBeneficiaryList
     public function register()
 	{
         $wooPblDbAdmin = new WooPBLDbAdmin();
+        $wooPblDbProduct = new WooPBLDbProduct();
 		$wooPblDbAdmin->init();
+		$wooPblDbProduct->init();
+
+		add_action('init', array($this, 'enqueue_scripts_callback'));
     }
 
     /**
@@ -68,6 +73,12 @@ class WoocommerceProductBeneficiaryList
 
         $wooPblDbInitializer = new WooPBLDbInitializer();
         $wooPblDbInitializer->destroyTables();
+	}
+
+	function enqueue_scripts_callback(){
+		wp_enqueue_style('woo-pbl', WOO_PBL_URL . '/assets/css/woo-pbl.min.css', array(), null);
+		wp_enqueue_script( 'woo-pbl', WOO_PBL_URL . '/assets/js/woo-pbl.js', ['jquery'], WOO_PBL_VER, true);
+	
 	}
 }
 
