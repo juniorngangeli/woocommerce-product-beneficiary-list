@@ -1,0 +1,88 @@
+<?php
+    defined('ABSPATH') or die('You silly human !');
+
+    class WooPBLDbAdminProduct {
+        public function init() {
+            add_filter( 'woocommerce_product_data_tabs', [$this, 'addProductBeneficiariesOptionTab'] , 99 , 1 );
+            add_action( 'woocommerce_product_data_panels', [$this, 'addProductBeneficiariesOptionDataFields'] );
+            add_action( 'woocommerce_process_product_meta', [$this, 'saveProductBeneficiariesOptionData'] );
+        }
+
+        public function addProductBeneficiariesOptionTab($product_data_tabs) {
+            $product_data_tabs['beneficiaries-options'] = array(
+                'label' => __( 'Beneficiaries options', 'woo-pbl' ),
+                'target' => 'beneficiaries_options_options',
+                'class' => 'beneficiaries_options',
+            );
+            return $product_data_tabs;
+        }
+
+        public function addProductBeneficiariesOptionDataFields() {
+            global $wpdb, $post;
+            $woo_pbl_product_rule_of_use_table = $wpdb->prefix . "woo_pbl_product_rule_of_use";
+            $wooPblProductRuleOfUse = $wpdb->get_row(
+                $wpdb->prepare(
+                    "
+                        SELECT *
+                        FROM $woo_pbl_product_rule_of_use_table
+                        WHERE product_id = %d
+                    ",
+                    $post->ID
+                ), ARRAY_A
+            );
+
+            
+            $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  $wooPblProductRuleOfUse['product_price_per_beneficiary'] : null;
+            $product_max_beneficiary =  isset($wooPblProductRuleOfUse['product_max_beneficiary']) ?  $wooPblProductRuleOfUse['product_max_beneficiary'] : -1;
+            require(WOO_PBL_DIR . 'admin/views/html-wc-product-beneficiaries-option-data-fields.php');
+        }
+
+        public function saveProductBeneficiariesOptionData($post_id) {
+            global $wpdb;
+            
+            $woo_pbl_product_rule_of_use_table = $wpdb->prefix . "woo_pbl_product_rule_of_use";
+
+            $product_id =  $post_id;
+            $product_beneficiaries_option_id = $wpdb->get_var(
+                $wpdb->prepare(
+                    "
+                        SELECT id
+                        FROM $woo_pbl_product_rule_of_use_table
+                        WHERE product_id = %d
+                    ",
+                    $product_id
+                )
+            );
+
+            $product_price_per_beneficiary =  $_POST['product_price_per_beneficiary'];
+            $product_max_beneficiary =  $_POST['product_max_beneficiary'];
+    
+
+            if(is_null($product_beneficiaries_option_id)) {
+                $current_time = current_time('mysql', 1);
+                $wpdb->insert( 
+                    $woo_pbl_product_rule_of_use_table, 
+                    array( 
+                        'product_id' => $product_id, 
+                        'product_price_per_beneficiary' => $product_price_per_beneficiary, 
+                        'product_max_beneficiary' => $product_max_beneficiary, 
+                        'created_at' => $current_time,
+                        'updated_at' => current_time('mysql', 1),
+                    ), 
+                    array( '%d', '%d','%d', '%s', '%s') 
+                );
+            } else {
+                $wpdb->update( 
+                    $woo_pbl_product_rule_of_use_table, 
+                    [
+                        'product_price_per_beneficiary' => $product_price_per_beneficiary, 
+                        'product_max_beneficiary' => $product_max_beneficiary,
+                        'updated_at' => current_time('mysql', 1),
+                    ], 
+                    ['id' => $product_beneficiaries_option_id, ],
+                    ['%d', '%d','%s',],
+                    ['%d']
+                );
+            }
+        }
+    }

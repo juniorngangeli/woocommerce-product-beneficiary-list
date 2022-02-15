@@ -1,4 +1,5 @@
 <?php
+    require_once(WOO_PBL_DIR . 'admin/class.woo_pbl.admin.product.php');
     defined('ABSPATH') or die('You silly human !');
 
     class WooPBLDbAdmin {
@@ -8,6 +9,9 @@
 
             add_action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_scripts_callback']);
             add_action('admin_init', array($this, 'process_woo_pbl_settings_form'));
+
+            $WooPBLDbAdminProduct = new WooPBLDbAdminProduct();
+            $WooPBLDbAdminProduct->init();
         }
 
         public function init_admin_menu() {

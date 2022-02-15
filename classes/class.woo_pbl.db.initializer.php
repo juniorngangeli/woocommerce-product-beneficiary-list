@@ -8,7 +8,8 @@
             global $wpdb;
             $charset_collate = $wpdb->get_charset_collate();
 
-            $sql = "CREATE TABLE woo_pbl_product_beneficiary (
+            $woo_pbl_product_beneficiary_table = $wpdb->prefix . 'woo_pbl_product_beneficiary';
+            $sql = "CREATE TABLE $woo_pbl_product_beneficiary_table (
                 id bigint(20) NOT NULL AUTO_INCREMENT,
                 
                 first_name varchar(50) NOT NULL,
@@ -23,13 +24,15 @@
                 PRIMARY KEY  (id)
               ) $charset_collate;";
 
-            $sql .= "CREATE TABLE woo_pbl_product_rule_of_use (
+            $woo_pbl_product_rule_of_use_table = $wpdb->prefix . 'woo_pbl_product_rule_of_use';
+            $sql .= "CREATE TABLE $woo_pbl_product_rule_of_use_table (
                 id bigint(20) NOT NULL AUTO_INCREMENT,
                 product_id bigint(20) NOT NULL,
                 product_price_per_beneficiary decimal(10,2) NULL,
                 product_max_beneficiary int(10) DEFAULT '-1' NULL,
 
                 created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+                updated_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
                 
                 PRIMARY KEY  (id)
               ) $charset_collate;";
@@ -38,8 +41,13 @@
         }
         
         public function destroyTables() {
-            $sql = "DROP TABLE IF EXISTS woo_pbl_product_beneficiary;";
-            $sql .= "DROP TABLE IF EXISTS woo_pbl_product_rule_of_use;";
+            global $wpdb;
+            $woo_pbl_product_beneficiary_table = $wpdb->prefix . 'woo_pbl_product_beneficiary';
+            $woo_pbl_product_rule_of_use_table = $wpdb->prefix . 'woo_pbl_product_rule_of_use';
+            
+            $sql = "DROP TABLE IF EXISTS $woo_pbl_product_beneficiary_table;";
+            $sql .= "DROP TABLE IF EXISTS $woo_pbl_product_rule_of_use_table;";
+            
             dbDelta( $sql );
         }
     }
