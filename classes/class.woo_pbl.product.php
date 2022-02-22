@@ -206,9 +206,11 @@
                 if(isset( $cart_item[WOO_PBL_CART_ITEM_KEY] )) {
                     $productId = $cart_item['data']->get_id();
                     $wooPblProductRuleOfUse = $this->getProductRuleOfUse($productId);
-                    $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  doubleVal($wooPblProductRuleOfUse['product_price_per_beneficiary']) : 0;
-                    $price = $product_price_per_beneficiary * count($cart_item[WOO_PBL_CART_ITEM_KEY]);
-                    $cart_item['data']->set_price( $price );
+                    if(isset($wooPblProductRuleOfUse['product_price_per_beneficiary'])) {
+                        $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  doubleVal($wooPblProductRuleOfUse['product_price_per_beneficiary']) : 0;
+                        $price = $product_price_per_beneficiary * count($cart_item[WOO_PBL_CART_ITEM_KEY]);
+                        $cart_item['data']->set_price( $price );
+                    }
                 }
             }
 
