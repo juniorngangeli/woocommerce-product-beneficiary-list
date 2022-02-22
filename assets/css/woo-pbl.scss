@@ -1,6 +1,9 @@
 .ProductBeneficiariesForm {
   label {
     display: block;
+    &.error {
+      color: #cf2e2e;
+    }
   }
 
   input[type="text"],
@@ -15,6 +18,9 @@
     display: block;
     width: 100%;
   }
+  .ProductBeneficiariesForm--Button {
+    margin-bottom: 1rem;
+  }
 }
 .ProductBeneficiaryForm {
   background-color: #f1f1f1;
@@ -25,6 +31,10 @@
   }
   label {
     display: block;
+  }
+
+  .form-field-error {
+    color: #cf2e2e;
   }
 
   input[type="text"],
@@ -39,6 +49,10 @@
     display: block;
     width: 100%;
     background-color: #fff;
+  }
+
+  .ProductBeneficiaryForm--Buttons {
+    text-align: right;
   }
 }
 

@@ -1,23 +1,22 @@
-<div class="ProductBeneficiariesForm">
-    <?php
-        woocommerce_wp_text_input(
-			array(
-                'id' => 'product_beneficiary_number',
-                'name' => 'product_beneficiary_number',
-                'label' => 'Number of beneficiaries',
-                'type' => 'number',
-				'min_value'   => 1,
-				'max_value'   => $product_max_beneficiary,
-				'value' => isset( $_POST['product_beneficiary_number'] ) ? wp_unslash( $_POST['product_beneficiary_number'] ) : 1, // WPCS: CSRF ok, input var ok.
-			)
-		);
-    ?>
+<div 
+    class="ProductBeneficiariesForm" 
+    data-product-max-beneficiary="<?php _e($product_max_beneficiary); ?>"
+    data-product-price-per-beneficiary="<?php _e($product_price_per_beneficiary); ?>"
+>
+    <button id="product_beneficiaries_form_button" class="ProductBeneficiariesForm--Button">
+        &plus; Add a beneficiary
+    </button>
 
     <div class="ProductBeneficiariesForm--List">
     </div>
 </div>
 
 <div class="ProductBeneficiaryForm Template">
+    <div class="ProductBeneficiaryForm--Buttons">
+        <button>
+            &times; Remove
+        </button>
+    </div>
         <?php
             woocommerce_wp_text_input(
                 array(
@@ -26,6 +25,9 @@
                     'label' => 'First name',
                     'type' => 'text',
                     'value' => '', // WPCS: CSRF ok, input var ok.
+                    'custom_attributes' => [
+                        'required' => true,
+                    ]
                 )
             );
 
@@ -36,6 +38,9 @@
                     'label' => 'Last name',
                     'type' => 'text',
                     'value' => '', // WPCS: CSRF ok, input var ok.
+                    'custom_attributes' => [
+                        'required' => true,
+                    ]
                 )
             );
 
@@ -44,8 +49,11 @@
                     'id' => 'email',
                     'name' => 'email[]',
                     'label' => 'Email',
-                    'type' => 'text',
+                    'type' => 'email',
                     'value' => '',
+                    'custom_attributes' => [
+                        'required' => true,
+                    ]
                 )
             );
         ?>
