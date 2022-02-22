@@ -52,6 +52,13 @@
                 10,
                 2
             );
+
+            add_action(
+                'woocommerce_before_calculate_totals',
+                array( $this, 'before_calculate_totals' ),
+                9,
+                1
+            );
         }
 
         public function getProductRuleOfUse($product_id) {
@@ -180,5 +187,31 @@
             }
 
            return $item_data;
+        }
+
+        public function before_calculate_totals( $cart )
+        {
+            if ( is_admin() && !defined( 'DOING_AJAX' ) ) {
+                return;
+            }
+            
+            if ( method_exists( $cart, 'get_cart' ) ) {
+                $cartContents = $cart->get_cart();
+            } else {
+                $cartContents = $cart->cart_contents;
+            }
+
+            foreach ( $cartContents as $cart_item ) {
+                $price = 0.0;
+                if(isset( $cart_item[WOO_PBL_CART_ITEM_KEY] )) {
+                    $productId = $cart_item['data']->get_id();
+                    $wooPblProductRuleOfUse = $this->getProductRuleOfUse($productId);
+                    $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  doubleVal($wooPblProductRuleOfUse['product_price_per_beneficiary']) : 0;
+                    $price = $product_price_per_beneficiary * count($cart_item[WOO_PBL_CART_ITEM_KEY]);
+                    $cart_item['data']->set_price( $price );
+                }
+            }
+
+            remove_action( 'woocommerce_before_calculate_totals', array( $this, 'before_calculate_totals' ), 9 );
         }
     }
