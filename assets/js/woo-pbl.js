@@ -1,52 +1,54 @@
 (function ($) {
-  $(".cart").attr("novalidate", "novalidate");
   const productBeneficiariesForm = $(".ProductBeneficiariesForm");
-  $("#product_beneficiaries_form_button").on("click", function (e) {
-    e.preventDefault();
-    const formListWrapper = $(".ProductBeneficiariesForm--List");
-    const formItemTemplate = $(".ProductBeneficiaryForm.Template");
-    const productBeneficiaryFormCount = $(formListWrapper).children(
-      ".ProductBeneficiaryForm"
-    ).length;
-
-    formItemTemplate.find("input").each(function (index, htmlElement) {
-      let htmlElementId = $(htmlElement).attr("id");
-      $(htmlElement).attr(
-        "id",
-        htmlElementId + (productBeneficiaryFormCount + 1)
-      );
-    });
-
-    formItemTemplate.find("label").each(function (index, htmlElement) {
-      let htmlElementId = $(htmlElement).attr("for");
-      $(htmlElement).attr(
-        "for",
-        htmlElementId + parseInt(productBeneficiaryFormCount + 1)
-      );
-    });
-
-    const formItemTemplateClone = formItemTemplate
-      .clone()
-      .removeClass("Template")
-      .attr("data-id", productBeneficiaryFormCount + 1)
-      .appendTo(formListWrapper);
-
-    $(formItemTemplateClone)
-      .find(".ProductBeneficiaryForm--Buttons button")
-      .on("click", function (e) {
-        e.preventDefault();
-        $(this).parents(".ProductBeneficiaryForm").remove();
-      });
-  });
 
   if (productBeneficiariesForm.length > 0) {
+    $(".cart").attr("novalidate", "novalidate");
+    $("#product_beneficiaries_form_button").on("click", function (e) {
+      e.preventDefault();
+      const formListWrapper = $(".ProductBeneficiariesForm--List");
+      const formItemTemplate = $(".ProductBeneficiaryForm.Template");
+      const productBeneficiaryFormCount = $(formListWrapper).children(
+        ".ProductBeneficiaryForm"
+      ).length;
+
+      formItemTemplate.find("input").each(function (index, htmlElement) {
+        let htmlElementId = $(htmlElement).attr("id");
+        $(htmlElement).attr(
+          "id",
+          htmlElementId + (productBeneficiaryFormCount + 1)
+        );
+      });
+
+      formItemTemplate.find("label").each(function (index, htmlElement) {
+        let htmlElementId = $(htmlElement).attr("for");
+        $(htmlElement).attr(
+          "for",
+          htmlElementId + parseInt(productBeneficiaryFormCount + 1)
+        );
+      });
+
+      const formItemTemplateClone = formItemTemplate
+        .clone()
+        .removeClass("Template")
+        .attr("data-id", productBeneficiaryFormCount + 1)
+        .appendTo(formListWrapper);
+
+      $(formItemTemplateClone)
+        .find(".ProductBeneficiaryForm--Buttons button")
+        .on("click", function (e) {
+          e.preventDefault();
+          $(this).parents(".ProductBeneficiaryForm").remove();
+        });
+    });
+
+    $("#product_beneficiaries_form_button").click();
+
     $(".single_add_to_cart_button").on("click", function (e) {
       //e.preventDefault();
     });
 
     $(".cart").on("submit", function (e) {
-      e.preventDefault();
-
+      let formErrorsCount = 0;
       $(".ProductBeneficiaryForm:not(.Template)")
         .find("input")
         .each(function (index, htmlElement) {
@@ -74,6 +76,7 @@
           $(htmlElement).parent(".form-field").find(`#${id}-error`).remove();
 
           if (inputHasErrors) {
+            formErrorsCount++;
             $(htmlElement)
               .parent(".form-field")
               .append(
@@ -81,6 +84,12 @@
               );
           }
         });
+
+      if (formErrorsCount) {
+        e.preventDefault();
+      } else {
+        $(".ProductBeneficiaryForm.Template").remove();
+      }
     });
   }
 })(jQuery);

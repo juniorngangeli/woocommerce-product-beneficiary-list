@@ -15,6 +15,7 @@ defined('ABSPATH') or die('You silly human !');
 define('WOO_PBL_URL', plugins_url('', __FILE__));
 define('WOO_PBL_DIR', plugin_dir_path(__FILE__));
 define('WOO_PBL_VER', '1.0.0');
+define('WOO_PBL_CART_ITEM_KEY', 'woo_pbl_cart_item_key');
 
 // Define plugin file constant.
 if ( ! defined( 'WOO_PBL_FILE' ) ) {
