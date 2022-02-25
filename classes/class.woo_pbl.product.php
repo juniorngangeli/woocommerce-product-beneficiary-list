@@ -180,7 +180,7 @@
                 foreach ($beneficiariesList as $key => $beneficiary) {
                     $item_data[] = array(
                         'name'  => _('Full name'),
-                        'key'   => _('Beneficiary ') . (intVal($key) + 1),
+                        'key'   => _('-'),
                         'value' => $beneficiary['first_name'] . ' ' . $beneficiary['last_name'] . ' ' . $beneficiary['email'],
                     );
                 }
@@ -206,7 +206,9 @@
                 if(isset( $cart_item[WOO_PBL_CART_ITEM_KEY] )) {
                     $productId = $cart_item['data']->get_id();
                     $wooPblProductRuleOfUse = $this->getProductRuleOfUse($productId);
-                    if(isset($wooPblProductRuleOfUse['product_price_per_beneficiary'])) {
+                    $beneficiaries_options_enabled =  isset($wooPblProductRuleOfUse['beneficiaries_options_enabled']) ?  $wooPblProductRuleOfUse['beneficiaries_options_enabled'] : 0;
+                    $requires_beneficiaries = ( $beneficiaries_options_enabled == 1);
+                    if($requires_beneficiaries) {
                         $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  doubleVal($wooPblProductRuleOfUse['product_price_per_beneficiary']) : 0;
                         $price = $product_price_per_beneficiary * count($cart_item[WOO_PBL_CART_ITEM_KEY]);
                         $cart_item['data']->set_price( $price );

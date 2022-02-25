@@ -35,9 +35,33 @@
 
       $(formItemTemplateClone)
         .find(".ProductBeneficiaryForm--Buttons button")
-        .on("click", function (e) {
-          e.preventDefault();
-          $(this).parents(".ProductBeneficiaryForm").remove();
+        .on("click", function (evt) {
+          evt.preventDefault();
+          let formHasValues = false;
+          $(this)
+            .parents(".ProductBeneficiaryForm")
+            .find("input")
+            .each(function (index, htmlElement) {
+              let value = $(htmlElement).val();
+              formHasValues = formHasValues || !!value.trim();
+            });
+
+          if (formHasValues) {
+            Swal.fire({
+              icon: "warning",
+              title: "Voulez-vous supprimer ces informations ?",
+              showDenyButton: false,
+              showCancelButton: true,
+              confirmButtonText: "Supprimer",
+              cancelButtonText: "Annuler",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                $(this).parents(".ProductBeneficiaryForm").remove();
+              }
+            });
+          } else {
+            $(this).parents(".ProductBeneficiaryForm").remove();
+          }
         });
     });
 

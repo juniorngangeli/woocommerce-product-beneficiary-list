@@ -78,7 +78,8 @@ class WoocommerceProductBeneficiaryList
 
 	function enqueue_scripts_callback(){
 		wp_enqueue_style('woo-pbl', WOO_PBL_URL . '/assets/css/woo-pbl.min.css', array(), null);
-		wp_enqueue_script( 'woo-pbl', WOO_PBL_URL . '/assets/js/woo-pbl.js', ['jquery'], WOO_PBL_VER, true);
+		wp_enqueue_script( 'sweet-alert', 'https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js', ['jquery'], null);
+		wp_enqueue_script( 'woo-pbl', WOO_PBL_URL . '/assets/js/woo-pbl.js', ['jquery', 'sweet-alert'], WOO_PBL_VER, true);
 	
 	}
 }
