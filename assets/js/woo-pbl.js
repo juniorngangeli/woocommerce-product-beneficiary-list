@@ -73,9 +73,11 @@
 
     $(".cart").on("submit", function (e) {
       let formErrorsCount = 0;
+      let formInputCount = 0;
       $(".ProductBeneficiaryForm:not(.Template)")
         .find("input")
         .each(function (index, htmlElement) {
+          formInputCount++;
           let id = $(htmlElement).attr("id");
           let type = $(htmlElement).attr("type");
           let required = $(htmlElement).attr("required");
@@ -112,6 +114,7 @@
       if (formErrorsCount) {
         e.preventDefault();
       } else {
+        $("[name='quantity']").val(formInputCount / 3);
         $(".ProductBeneficiaryForm.Template").remove();
       }
     });

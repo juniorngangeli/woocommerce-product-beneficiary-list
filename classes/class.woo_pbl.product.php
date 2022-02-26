@@ -33,10 +33,10 @@
             );
 
             add_filter(
-                'woocommerce_is_sold_individually',
-                array( $this, 'is_sold_individually' ),
+                'post_class',
+                array( $this, 'product_class' ),
                 10,
-                2
+                3
             );
 
             add_filter(
@@ -53,12 +53,7 @@
                 2
             );
 
-            add_action(
-                'woocommerce_before_calculate_totals',
-                array( $this, 'before_calculate_totals' ),
-                9,
-                1
-            );
+            add_filter( 'woocommerce_cart_item_quantity', [$this, 'change_quantity_input'], 10, 3);
         }
 
         public function getProductRuleOfUse($product_id) {
@@ -134,6 +129,19 @@
             return $support;
         }
 
+        public function product_class( $classes = array(), $class = false, $product_id = false )
+        {
+            $wooPblProductRuleOfUse = $this->getProductRuleOfUse($product_id);
+            $beneficiaries_options_enabled =  isset($wooPblProductRuleOfUse['beneficiaries_options_enabled']) ?  $wooPblProductRuleOfUse['beneficiaries_options_enabled'] : 0;
+
+            $requires_beneficiaries = ( $beneficiaries_options_enabled == 1);
+            
+            if ( $requires_beneficiaries ) {
+                $classes[] = 'product_requires_beneficiaries';
+            }
+            return $classes;
+        }
+
         public function is_sold_individually( $value, $_product )
         {
             $wooPblProductRuleOfUse = $this->getProductRuleOfUse($_product->get_id());
@@ -178,10 +186,13 @@
             if ( $requires_beneficiaries ) {
                 $beneficiariesList = $cart_item[WOO_PBL_CART_ITEM_KEY];
                 foreach ($beneficiariesList as $key => $beneficiary) {
+                    $userRow = $beneficiary['first_name'];
+                    $userRow .= ' ' . $beneficiary['last_name'];
+                    $userRow .= ' ' . $beneficiary['email'];
+
                     $item_data[] = array(
-                        'name'  => _('Full name'),
-                        'key'   => _('-'),
-                        'value' => $beneficiary['first_name'] . ' ' . $beneficiary['last_name'] . ' ' . $beneficiary['email'],
+                        'key'   => _('FullName'),
+                        'value' => "<li>$userRow</li>",
                     );
                 }
             }
@@ -217,5 +228,18 @@
             }
 
             remove_action( 'woocommerce_before_calculate_totals', array( $this, 'before_calculate_totals' ), 9 );
+        }
+
+        public function change_quantity_input( $product_quantity, $cart_item_key, $cart_item ) {
+            $productId = $cart_item['data']->get_id();
+            $wooPblProductRuleOfUse = $this->getProductRuleOfUse($productId);
+            $beneficiaries_options_enabled =  isset($wooPblProductRuleOfUse['beneficiaries_options_enabled']) ?  $wooPblProductRuleOfUse['beneficiaries_options_enabled'] : 0;
+            $requires_beneficiaries = ( $beneficiaries_options_enabled == 1);
+            
+            if ( $requires_beneficiaries ) {
+                return '<span>' . $cart_item['quantity'] . '</span>';
+            }
+        
+            return $product_quantity;
         }
     }
