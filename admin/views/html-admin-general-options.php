@@ -1,11 +1,11 @@
 <?php
-$default_enabled_product_category = get_option('default_enabled_product_category');
-$max_beneficiaries_per_product = get_option('max_beneficiaries_per_product');
+  $order_status_email_trigger = get_option('order_status_email_trigger');
+  $order_statuses = wc_get_order_statuses();
 ?>
 
 <div class="wrap">
 
-  <h1><?php _e('General options', 'woo-pbl'); ?></h1>
+  <h1><?php esc_html_e('General options', 'woo-pbl'); ?></h1>
 
   <?php if (isset($_GET['msg'])) : ?>
     <div id="message" class="updated below-h2">
@@ -39,31 +39,18 @@ $max_beneficiaries_per_product = get_option('max_beneficiaries_per_product');
           <table class="form-table">
             <tbody>
               <tr>
-                <th scope="row"><?php _e('Default enabled product categories', 'woo-pbl') ?></th>
+                <th scope="row"><?php esc_html_e('Order status email trigger', 'woo-pbl') ?></th>
                 <td>
-                  <select name="default_enabled_product_category[]" id="default_enabled_product_category" multiple="multiple" style="max-width:100%;width:100%;">
-                    <?php foreach ($product_categories as $category): ?>
-                    <option 
-                      <?php selected(in_array($category->term_id, $default_enabled_product_category), true, true) ?>
-                      value="<?php _e($category->term_id); ?>"
-                    >
-                      <?php _e($category->name); ?>
-                    </option>
-                    <?php endforeach; ?>
-                  </select>
-                </td>
-              </tr>
-
-              <tr>
-                <th scope="row"><?php _e('Max beneficiaries per product', 'woo-pbl') ?></th>
-                <td>
-                  <input 
-                    style="max-width:100%;width:100%;"
-                    type="number" 
-                    class="" 
-                    name="max_beneficiaries_per_product" 
-                    value="<?php _e($max_beneficiaries_per_product); ?>"
-                  />
+                  <select name="order_status_email_trigger" id="order_status_email_trigger" style="max-width:100%;width:100%;">
+                      <?php foreach ($order_statuses as $order_status_slug => $order_status_name): ?>
+                      <option 
+                        <?php selected($order_status_email_trigger, $order_status_slug, true) ?>
+                        value="<?php esc_html_e($order_status_slug); ?>"
+                      >
+                        <?php _e($order_status_name); ?>
+                      </option>
+                      <?php endforeach; ?>
+                    </select>
                 </td>
               </tr>
             </tbody>
@@ -82,9 +69,3 @@ $max_beneficiaries_per_product = get_option('max_beneficiaries_per_product');
 </form>
 
 </div>
-
-<script>
-  (function($) {
-    $('#default_enabled_product_category').select2();
-  })(jQuery)
-</script>

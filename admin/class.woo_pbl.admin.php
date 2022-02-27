@@ -7,7 +7,6 @@
             add_action('admin_menu', [$this, 'init_admin_menu']);
             add_filter( 'plugin_action_links_' . WOO_PBL_BASENAME, array( $this, 'action_links' ) );
 
-            add_action( 'admin_enqueue_scripts', [$this, 'admin_enqueue_scripts_callback']);
             add_action('admin_init', array($this, 'process_woo_pbl_settings_form'));
 
             $WooPBLDbAdminProduct = new WooPBLDbAdminProduct();
@@ -47,19 +46,10 @@
             if (!isset($_POST['update_woo_pbl_general_options'])) return false;
             check_admin_referer('nonce_woo_pbl_general_options');
 
-            $default_enabled_product_category = $_POST['default_enabled_product_category'];
-            $max_beneficiaries_per_product = $_POST['max_beneficiaries_per_product'];
+            $order_status_email_trigger = $_POST['order_status_email_trigger'];
 
-            update_option('max_beneficiaries_per_product', $max_beneficiaries_per_product);
-            update_option('default_enabled_product_category', $default_enabled_product_category);
+            update_option('order_status_email_trigger', $order_status_email_trigger);
 
             wp_redirect('admin.php?page=woo-pbl-settings&msg=update');
-        }
-
-        function admin_enqueue_scripts_callback(){
-            wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
-            wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', 'jquery', '4.1.0-rc.0');
-            wp_enqueue_script( 'select2-init', '/wp-content/plugins/select-2-tutorial/select2-init.js', 'jquery', '4.1.0-rc.0');
-        
         }
     }
