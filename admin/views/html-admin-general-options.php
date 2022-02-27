@@ -1,5 +1,6 @@
 <?php
   $order_status_email_trigger = get_option('order_status_email_trigger');
+  $email_notification_content = get_option('email_notification_content');
   $order_statuses = wc_get_order_statuses();
 ?>
 
@@ -44,13 +45,30 @@
                   <select name="order_status_email_trigger" id="order_status_email_trigger" style="max-width:100%;width:100%;">
                       <?php foreach ($order_statuses as $order_status_slug => $order_status_name): ?>
                       <option 
-                        <?php selected($order_status_email_trigger, $order_status_slug, true) ?>
-                        value="<?php esc_html_e($order_status_slug); ?>"
+                        <?php selected($order_status_email_trigger, str_replace("wc-", "", $order_status_slug), true) ?>
+                        value="<?php esc_html_e(str_replace("wc-", "", $order_status_slug)); ?>"
                       >
                         <?php _e($order_status_name); ?>
                       </option>
                       <?php endforeach; ?>
                     </select>
+                </td>
+              </tr>
+              
+              <tr>
+                <th scope="row"><?php esc_html_e('Email notification content', 'woo-pbl') ?></th>
+                <td>
+                  <?php 
+                    wp_editor( 
+                      $email_notification_content, 
+                      'email_notification_content', 
+                      $settings = array(
+                        'textarea_name'=>'email_notification_content',
+                        'media_buttons' => false,
+                        'textarea_rows' => 8,
+                      ) 
+                    ); 
+                  ?>
                 </td>
               </tr>
             </tbody>

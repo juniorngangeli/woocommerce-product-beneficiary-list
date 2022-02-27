@@ -75,6 +75,8 @@
                 10,
                 1
             );
+
+            add_action( 'woocommerce_order_status_changed', array( $this, 'track_order_status_change' ), 10, 3 );
         }
 
         public function getProductRuleOfUse($product_id) {
@@ -293,5 +295,12 @@
             $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderId($order->get_id());
 
             require(WOO_PBL_DIR . 'views/html-product-beneficiaries-order-details.php');
+        }
+
+        public function track_order_status_change($id, $previous_status, $next_status) {
+            $order_status_email_trigger = get_option('order_status_email_trigger');
+            if($order_status_email_trigger == $next_status) {
+                //TODO: send emails here.
+            }
         }
     }

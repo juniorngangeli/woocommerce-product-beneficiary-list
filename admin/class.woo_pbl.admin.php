@@ -47,8 +47,10 @@
             check_admin_referer('nonce_woo_pbl_general_options');
 
             $order_status_email_trigger = $_POST['order_status_email_trigger'];
+            $email_notification_content = $_POST['email_notification_content'];
 
             update_option('order_status_email_trigger', $order_status_email_trigger);
+            update_option('email_notification_content', $email_notification_content);
 
             wp_redirect('admin.php?page=woo-pbl-settings&msg=update');
         }

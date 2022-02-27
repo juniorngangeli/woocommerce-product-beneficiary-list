@@ -20,6 +20,8 @@
                 others varchar(255) NULL,
                 order_id bigint(20) NOT NULL,
                 
+                was_beneficiary_notified tinyint(1) DEFAULT '0' NOT NULL,
+
                 created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
                 updated_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
                 
