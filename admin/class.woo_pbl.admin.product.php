@@ -6,6 +6,13 @@
             add_filter( 'woocommerce_product_data_tabs', [$this, 'addProductBeneficiariesOptionTab'] , 99 , 1 );
             add_action( 'woocommerce_product_data_panels', [$this, 'addProductBeneficiariesOptionDataFields'] );
             add_action( 'woocommerce_process_product_meta', [$this, 'saveProductBeneficiariesOptionData'] );
+
+            add_action(
+                'woocommerce_before_order_itemmeta',
+                array( $this, 'before_order_item_meta' ),
+                10,
+                3
+            );
         }
 
         public function addProductBeneficiariesOptionTab($product_data_tabs) {
@@ -88,5 +95,13 @@
                     ['%d']
                 );
             }
+        }
+
+        public function before_order_item_meta($item_id, $item, $product) {
+            global $wpdb;
+            $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem(null, null);
+            $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderId($item->get_order_id());
+
+            require(WOO_PBL_DIR . 'admin/views/html-product-beneficiaries-order-details.php');
         }
     }

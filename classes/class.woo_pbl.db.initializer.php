@@ -16,8 +16,8 @@
                 last_name varchar(50) NOT NULL,
                 email varchar(100) NULL,
                 phone_number varchar(20) NULL,
-                others varchar(255) NULL,
 
+                others varchar(255) NULL,
                 order_id bigint(20) NOT NULL,
                 
                 created_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,

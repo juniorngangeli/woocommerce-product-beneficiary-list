@@ -53,7 +53,28 @@
                 2
             );
 
+            add_action(
+                'woocommerce_order_item_meta_end',
+                array( $this, 'order_details' ),
+                10,
+                3
+            );
+
             add_filter( 'woocommerce_cart_item_quantity', [$this, 'change_quantity_input'], 10, 3);
+
+            add_action(
+                'woocommerce_checkout_create_order_line_item',
+                array( $this, 'create_order_line_item' ),
+                10,
+                4
+            );
+
+            add_action(
+                'woocommerce_checkout_update_order_meta',
+                array( $this, 'update_order_meta' ),
+                10,
+                1
+            );
         }
 
         public function getProductRuleOfUse($product_id) {
@@ -93,10 +114,10 @@
         public function add_to_cart_text($text, $product) {
             global $product;
             $requires_beneficiaries = $this->productRequiresBeneficiaries($product->get_id());
-            if ($requires_beneficiaries) {
+            if (!$requires_beneficiaries) {
                 return $text;
             } else {
-                return _('Book item');
+                return __('Book item');
             }
         }
 
@@ -252,13 +273,25 @@
         
         public function update_order_item( $item, $order_id )
         {
-            $meta_data = $item->get_meta( WOO_PBL_CART_ITEM_KEY );
+            $product_beneficiaries_list = $item->get_meta( WOO_PBL_CART_ITEM_KEY );
             
-            if ( $meta_data ) {
+            if ( $product_beneficiaries_list && count($product_beneficiaries_list)>0 ) {
                 $product_id = $item->get_product_id();
                 $variation_id = $item->get_variation_id();
-                
+                $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem($product_id, $variation_id);
+
+                foreach ($product_beneficiaries_list as $product_beneficiary_item) {
+                    $wooPblProductBeneficiariesItem->merge($product_beneficiary_item, $order_id);
+                }
             }
         
+        }
+
+        public function order_details($item_id, $item, $order) {
+            global $wpdb;
+            $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem(null, null);
+            $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderId($order->get_id());
+
+            require(WOO_PBL_DIR . 'views/html-product-beneficiaries-order-details.php');
         }
     }
