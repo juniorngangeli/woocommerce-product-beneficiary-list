@@ -1,7 +1,10 @@
 <?php
     defined('ABSPATH') or die('You silly human !');
     require_once(WOO_PBL_DIR . 'classes/class.woo_pbl.product.beneficiaries.item.php');
+    require_once(WOO_PBL_DIR . 'classes/utils/class.woo_pbl.utils.php');
     class WooPBLDbProduct {
+        use WooPBLUtils;
+
         public function init() {
             add_action( 'woocommerce_after_add_to_cart_quantity', [$this, 'productBeneficiariesForm']);
 
@@ -267,13 +270,13 @@
             $order = wc_get_order( $order_id );
             $items = $order->get_items();
             if ( is_array( $items ) ) {
-                foreach ( $items as $item_id => $item ) {
-                    $this->update_order_item( $item, $order->get_id() );
+                foreach ( $items as $item ) {
+                    $this->update_order_item( $item );
                 }
             }
         }
         
-        public function update_order_item( $item, $order_id )
+        public function update_order_item( $item )
         {
             $product_beneficiaries_list = $item->get_meta( WOO_PBL_CART_ITEM_KEY );
             
@@ -283,7 +286,7 @@
                 $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem($product_id, $variation_id);
 
                 foreach ($product_beneficiaries_list as $product_beneficiary_item) {
-                    $wooPblProductBeneficiariesItem->merge($product_beneficiary_item, $order_id);
+                    $wooPblProductBeneficiariesItem->merge($product_beneficiary_item, $item->get_id());
                 }
             }
         
@@ -292,15 +295,66 @@
         public function order_details($item_id, $item, $order) {
             global $wpdb;
             $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem(null, null);
-            $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderId($order->get_id());
+            $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderItemId($item_id);
 
-            require(WOO_PBL_DIR . 'views/html-product-beneficiaries-order-details.php');
+            $this->views('views/html-product-beneficiaries-order-details', [
+                'product_beneficiaries_list' => $product_beneficiaries_list,
+                'wooPblProductBeneficiariesItem' => $wooPblProductBeneficiariesItem,
+                'item' => $item,
+                'order' => $order,
+            ]);
         }
 
         public function track_order_status_change($id, $previous_status, $next_status) {
             $order_status_email_trigger = get_option('order_status_email_trigger');
             if($order_status_email_trigger == $next_status) {
-                //TODO: send emails here.
+                $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem(null, null);
+                $order = new \WC_Order( $id );
+                $order_items = $order->get_items();
+                foreach ( $order_items as $order_item ) {
+                    $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderItemId($order_item->get_id());
+                    if(count($product_beneficiaries_list) > 0) {
+                        $product = $order_item->get_product();
+                        $this->sendEmailsToBeneficiaries($order, $product, $product_beneficiaries_list);
+                    }
+                }
+            }
+        }
+
+        private function sendEmailsToBeneficiaries($order, $product, $beneficiaries) {
+            foreach ($beneficiaries as $beneficiary) {
+                $billing_first_name = $order->get_billing_first_name();
+                $billing_last_name = $order->get_billing_last_name();
+                $billing_company = $order->get_billing_company();
+
+                $product_permalink = $product->get_permalink();
+                $product_title = $product->get_title();
+
+                $email_notification_content = sprintf(__('<p> Hi %s %s,</p>', 'woo-pbl'), $beneficiary['first_name'], $beneficiary['last_name']);
+                $email_notification_content .= sprintf(
+                    __('<p> %s %s booked a seat for you in <b><a href="%s" target="_blank">%s</a></b>.</p>', 'woo-pbl'),
+                    $billing_first_name,
+                    $billing_last_name,
+                    $product_permalink,
+                    $product_title
+                );
+
+                $subject = sprintf(
+                    __('%s %s booked a seat for you in %s', 'woo-pbl'),
+                    $billing_first_name,
+                    $billing_last_name,
+                    $product_title
+                );
+
+                if(!empty($billing_company)) {
+                    $email_notification_content .= __("<p>in the behalf of <b>%s</b> company</p>", $billing_company);
+                }
+
+                if($beneficiary['was_beneficiary_notified'] == 0) {
+                    $this->sendEmail($beneficiary['email'], $email_notification_content, $subject);
+                    $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem(null, null);
+                    $wooPblProductBeneficiariesItem->markAsNotified($beneficiary);
+                }
             }
         }
     }

@@ -18,7 +18,7 @@
                 phone_number varchar(20) NULL,
 
                 others varchar(255) NULL,
-                order_id bigint(20) NOT NULL,
+                order_item_id bigint(20) NOT NULL,
                 
                 was_beneficiary_notified tinyint(1) DEFAULT '0' NOT NULL,
 
@@ -49,10 +49,8 @@
             global $wpdb;
             $woo_pbl_product_beneficiary_table = $wpdb->prefix . 'woo_pbl_product_beneficiary';
             $woo_pbl_product_rule_of_use_table = $wpdb->prefix . 'woo_pbl_product_rule_of_use';
-            
-            $sql = "DROP TABLE IF EXISTS $woo_pbl_product_beneficiary_table;";
-            $sql .= "DROP TABLE IF EXISTS $woo_pbl_product_rule_of_use_table;";
-            
-            dbDelta( $sql );
+
+            $wpdb->query( "DROP TABLE IF EXISTS $woo_pbl_product_beneficiary_table;" );
+            $wpdb->query( "DROP TABLE IF EXISTS $woo_pbl_product_rule_of_use_table;" );
         }
     }

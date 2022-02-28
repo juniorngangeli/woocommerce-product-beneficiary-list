@@ -41,7 +41,7 @@
             ];
         }
 
-        public function getByOrderId($order_id) {
+        public function getByOrderItemId($order_item_id) {
             global $wpdb;
 
             $woo_pbl_product_beneficiary_table = $wpdb->prefix . 'woo_pbl_product_beneficiary';
@@ -50,13 +50,13 @@
                     "
                         SELECT *
                         FROM $woo_pbl_product_beneficiary_table
-                        WHERE order_id = %d
+                        WHERE order_item_id = %d
                     ",
-                    $order_id
+                    $order_item_id
                 ), ARRAY_A
             );
         }
-        public function merge($product_beneficiary_item, $order_id) {
+        public function merge($product_beneficiary_item, $order_item_id) {
             global $wpdb;
 
             $woo_pbl_product_beneficiary_table = $wpdb->prefix . 'woo_pbl_product_beneficiary';
@@ -66,9 +66,9 @@
                     "
                         SELECT id
                         FROM $woo_pbl_product_beneficiary_table
-                        WHERE order_id = %d AND email = %s
+                        WHERE order_item_id = %d AND email = %s
                     ",
-                    $order_id,
+                    $order_item_id,
                     $normalized_item['email']
                 )
             );
@@ -78,7 +78,7 @@
                 $wpdb->insert( 
                     $woo_pbl_product_beneficiary_table, 
                     array( 
-                        'order_id' => $order_id, 
+                        'order_item_id' => $order_item_id, 
                         'first_name' => $normalized_item['first_name'], 
                         'last_name' => $normalized_item['last_name'], 
                         'email' => $normalized_item['email'], 
@@ -105,6 +105,21 @@
                     ['%d']
                 );
             }
+        }
+
+        public function markAsNotified($beneficiary) {
+            global $wpdb;
+            $woo_pbl_product_beneficiary_table = $wpdb->prefix . 'woo_pbl_product_beneficiary';
+            $wpdb->update( 
+                $woo_pbl_product_beneficiary_table, 
+                [
+                    'was_beneficiary_notified' => 1, 
+                    'updated_at' => current_time('mysql', 1),
+                ], 
+                ['id' => $beneficiary['id']],
+                ['%d', '%s'],
+                ['%d']
+            );
         }
         
     }

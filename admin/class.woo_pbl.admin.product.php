@@ -100,7 +100,7 @@
         public function before_order_item_meta($item_id, $item, $product) {
             global $wpdb;
             $wooPblProductBeneficiariesItem = new WooPBLProductBeneficiariesItem(null, null);
-            $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderId($item->get_order_id());
+            $product_beneficiaries_list = $wooPblProductBeneficiariesItem->getByOrderItemId($item->get_order_id());
 
             require(WOO_PBL_DIR . 'admin/views/html-product-beneficiaries-order-details.php');
         }
