@@ -29,8 +29,8 @@
             $settings_link = sprintf(
                 '<a href="%1$s" aria-label="%2$s">%3$s</a>',
                 esc_url( admin_url( 'admin.php?page=woo-pbl-settings' ) ),
-                _x( 'View Woocommerce Product Beneficiary List settings', 'aria-label: settings link', 'woo-pbl' ),
-                _x( 'Settings', 'plugin action link', 'woo-pbl' )
+                __( 'View Woocommerce Product Beneficiary List settings', 'aria-label: settings link', 'woo-pbl' ),
+                __( 'Settings', 'plugin action link', 'woo-pbl' )
             );
     
             array_unshift( $links, $settings_link );

@@ -4,7 +4,7 @@
     data-product-price-per-beneficiary="<?php _e($product_price_per_beneficiary); ?>"
 >
     <button id="product_beneficiaries_form_button" class="ProductBeneficiariesForm--Button">
-        &plus; Add a beneficiary
+        &plus; <?php esc_html_e('Add a attendee', 'woo-pbl'); ?>
     </button>
 
     <div class="ProductBeneficiariesForm--List">
@@ -14,7 +14,7 @@
 <div class="ProductBeneficiaryForm Template">
     <div class="ProductBeneficiaryForm--Buttons">
         <button>
-            &times; Remove
+            &times; <?php esc_html_e('Remove', 'woo-pbl'); ?>
         </button>
     </div>
         <?php
@@ -22,7 +22,7 @@
                 array(
                     'id' => 'first_name',
                     'name' => 'first_name[]',
-                    'label' => 'First name',
+                    'label' => esc_html_e('First name', 'woo-pbl'),
                     'type' => 'text',
                     'value' => '', // WPCS: CSRF ok, input var ok.
                     'custom_attributes' => [
@@ -35,7 +35,7 @@
                 array(
                     'id' => 'last_name',
                     'name' => 'last_name[]',
-                    'label' => 'Last name',
+                    'label' => esc_html_e('Last name', 'woo-pbl'),
                     'type' => 'text',
                     'value' => '', // WPCS: CSRF ok, input var ok.
                     'custom_attributes' => [
@@ -48,7 +48,7 @@
                 array(
                     'id' => 'email',
                     'name' => 'email[]',
-                    'label' => 'Email',
+                    'label' => esc_html_e('Email', 'woo-pbl'),
                     'type' => 'email',
                     'value' => '',
                     'custom_attributes' => [
