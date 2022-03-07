@@ -197,7 +197,7 @@
                     $userRow .= ' ' . $beneficiary['email'];
 
                     $item_data[] = array(
-                        'key'   => _('FullName'),
+                        'key'   => __('FullName'),
                         'value' => "<li>$userRow</li>",
                     );
                 }
