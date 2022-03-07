@@ -122,7 +122,7 @@
             if (!$requires_beneficiaries) {
                 return $text;
             } else {
-                return __('Book item');
+                return __('Book a seat');
             }
         }
 
