@@ -17,7 +17,7 @@
 
         public function addProductBeneficiariesOptionTab($product_data_tabs) {
             $product_data_tabs['beneficiaries-options'] = array(
-                'label' => __( 'Beneficiaries options', 'woo-pbl' ),
+                'label' => __( 'Participants options', 'woo-pbl' ),
                 'target' => 'beneficiaries_options_options',
                 'class' => 'beneficiaries_options',
             );

@@ -64,18 +64,6 @@ class WoocommerceProductBeneficiaryList
         //TODO: implement something here.
 	}
 
-    /**
-	 * Uninstall
-	 */
-	function uninstall()
-	{
-		delete_option('woo_pbl_ver');
-		delete_option('woo_pbl_need_flush');
-
-        $wooPblDbInitializer = new WooPBLDbInitializer();
-        $wooPblDbInitializer->destroyTables();
-	}
-
 	function enqueue_scripts_callback(){
 		wp_enqueue_style('woo-pbl', WOO_PBL_URL . '/assets/css/woo-pbl.min.css', array(), null);
 		wp_enqueue_script( 'sweet-alert', 'https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js', ['jquery'], null);
@@ -85,6 +73,17 @@ class WoocommerceProductBeneficiaryList
 }
 
 
+/**
+ * Uninstall
+ */
+function uninstall()
+{
+	delete_option('woo_pbl_ver');
+	delete_option('woo_pbl_need_flush');
+
+	$wooPblDbInitializer = new WooPBLDbInitializer();
+	$wooPblDbInitializer->destroyTables();
+}
 
 if (class_exists('WoocommerceProductBeneficiaryList')) {
 	$wooPBL = new WoocommerceProductBeneficiaryList();
@@ -92,5 +91,5 @@ if (class_exists('WoocommerceProductBeneficiaryList')) {
 
 	register_activation_hook(__FILE__, [$wooPBL, 'activate']);
 	register_deactivation_hook(__FILE__, [$wooPBL, 'deactivate']);
-	register_uninstall_hook(__FILE__, [$wooPBL, 'uninstall']);
+	register_uninstall_hook(__FILE__, 'uninstall');
 }
