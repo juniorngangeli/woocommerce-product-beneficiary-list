@@ -76,7 +76,7 @@ class WoocommerceProductBeneficiaryList
 /**
  * Uninstall
  */
-function uninstall()
+function woo_pbl_uninstall()
 {
 	delete_option('woo_pbl_ver');
 	delete_option('woo_pbl_need_flush');
@@ -91,5 +91,5 @@ if (class_exists('WoocommerceProductBeneficiaryList')) {
 
 	register_activation_hook(__FILE__, [$wooPBL, 'activate']);
 	register_deactivation_hook(__FILE__, [$wooPBL, 'deactivate']);
-	register_uninstall_hook(__FILE__, 'uninstall');
+	register_uninstall_hook(__FILE__, 'woo_pbl_uninstall');
 }

@@ -56,5 +56,18 @@
                     ]
                 )
             );
+
+            woocommerce_wp_text_input(
+                array(
+                    'id' => 'phone_number',
+                    'name' => 'phone_number[]',
+                    'label' => esc_html_e('Phone number', 'woo-pbl'),
+                    'type' => 'text',
+                    'value' => '',
+                    'custom_attributes' => [
+                        'required' => false,
+                    ]
+                )
+            );
         ?>
     </div>

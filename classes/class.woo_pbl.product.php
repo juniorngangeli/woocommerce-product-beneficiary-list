@@ -105,6 +105,8 @@
 
             $wooPblProductRuleOfUse = $this->getProductRuleOfUse($product->get_id());
 
+            $stock = $product->get_stock_quantity();
+            
             $product_price_per_beneficiary = isset($wooPblProductRuleOfUse['product_price_per_beneficiary']) ?  $wooPblProductRuleOfUse['product_price_per_beneficiary'] : null;
             $product_max_beneficiary =  isset($wooPblProductRuleOfUse['product_max_beneficiary']) ?  $wooPblProductRuleOfUse['product_max_beneficiary'] : -1;
             $beneficiaries_options_enabled =  isset($wooPblProductRuleOfUse['beneficiaries_options_enabled']) ?  $wooPblProductRuleOfUse['beneficiaries_options_enabled'] : 0;
@@ -195,6 +197,7 @@
                     $userRow = $beneficiary['first_name'];
                     $userRow .= ' ' . $beneficiary['last_name'];
                     $userRow .= ' ' . $beneficiary['email'];
+                    $userRow .= ' ' . $beneficiary['phone_number'];
 
                     $item_data[] = array(
                         'key'   => __('FullName'),
