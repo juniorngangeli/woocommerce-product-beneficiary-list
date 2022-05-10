@@ -17,6 +17,7 @@
                 'first_name',
                 'last_name',
                 'email',
+                'phone_number',
             ];
             $beneficiaries = [];
 
@@ -56,6 +57,7 @@
                 ), ARRAY_A
             );
         }
+        
         public function merge($product_beneficiary_item, $order_item_id) {
             global $wpdb;
 

@@ -1,6 +1,6 @@
 <div 
     class="ProductBeneficiariesForm" 
-    data-product-max-beneficiary="<?php _e($product_max_beneficiary); ?>"
+    data-product-max-participants="<?php _e($stock); ?>"
     data-product-price-per-beneficiary="<?php _e($product_price_per_beneficiary); ?>"
 >
     <button id="product_beneficiaries_form_button" class="ProductBeneficiariesForm--Button">

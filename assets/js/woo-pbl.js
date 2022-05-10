@@ -1,17 +1,26 @@
 (function ($) {
   const productBeneficiariesForm = $(".ProductBeneficiariesForm");
+  const maxParticipants = $(".ProductBeneficiariesForm").data(
+    "product-max-participants"
+  );
+  let addedParticipantCount = 1;
 
   if (productBeneficiariesForm.length > 0) {
     $(".cart").attr("novalidate", "novalidate");
     $("#product_beneficiaries_form_button").on("click", function (e) {
       e.preventDefault();
+
+      if (maxParticipants == addedParticipantCount) return false;
+
+      addedParticipantCount++;
+
       const formListWrapper = $(".ProductBeneficiariesForm--List");
       const formItemTemplate = $(".ProductBeneficiaryForm.Template");
       const productBeneficiaryFormCount = $(formListWrapper).children(
         ".ProductBeneficiaryForm"
       ).length;
 
-      formItemTemplate.find("input").each(function (index, htmlElement) {
+      formItemTemplate.find("input").each(function (_index, htmlElement) {
         let htmlElementId = $(htmlElement).attr("id");
         $(htmlElement).attr(
           "id",
@@ -19,7 +28,7 @@
         );
       });
 
-      formItemTemplate.find("label").each(function (index, htmlElement) {
+      formItemTemplate.find("label").each(function (_index, htmlElement) {
         let htmlElementId = $(htmlElement).attr("for");
         $(htmlElement).attr(
           "for",
@@ -41,7 +50,7 @@
           $(this)
             .parents(".ProductBeneficiaryForm")
             .find("input")
-            .each(function (index, htmlElement) {
+            .each(function (_index, htmlElement) {
               let value = $(htmlElement).val();
               formHasValues = formHasValues || !!value.trim();
             });
@@ -57,26 +66,25 @@
             }).then((result) => {
               if (result.isConfirmed) {
                 $(this).parents(".ProductBeneficiaryForm").remove();
+                addedParticipantCount--;
               }
             });
           } else {
             $(this).parents(".ProductBeneficiaryForm").remove();
+            addedParticipantCount--;
           }
         });
     });
 
     $("#product_beneficiaries_form_button").click();
 
-    $(".single_add_to_cart_button").on("click", function (e) {
-      //e.preventDefault();
-    });
-
     $(".cart").on("submit", function (e) {
       let formErrorsCount = 0;
       let formInputCount = 0;
+      alert(addedParticipantCount);
       $(".ProductBeneficiaryForm:not(.Template)")
         .find("input")
-        .each(function (index, htmlElement) {
+        .each(function (_index, htmlElement) {
           formInputCount++;
           let id = $(htmlElement).attr("id");
           let type = $(htmlElement).attr("type");
@@ -114,7 +122,7 @@
       if (formErrorsCount) {
         e.preventDefault();
       } else {
-        $("[name='quantity']").val(formInputCount / 3);
+        $("[name='quantity']").val(addedParticipantCount);
         $(".ProductBeneficiaryForm.Template").remove();
       }
     });

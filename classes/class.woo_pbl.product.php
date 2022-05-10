@@ -86,7 +86,7 @@
             global $wpdb;
             $woo_pbl_product_rule_of_use_table = $wpdb->prefix . "woo_pbl_product_rule_of_use";
 
-            $wooPblProductRuleOfUse = $wpdb->get_row(
+            return $wpdb->get_row(
                 $wpdb->prepare(
                     "
                         SELECT *
@@ -96,8 +96,6 @@
                     $product_id
                 ), ARRAY_A
             );
-
-            return $wooPblProductRuleOfUse;
         }
 
         public function productBeneficiariesForm() {
